@@ -1,0 +1,27 @@
+{
+  "name": "landing",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "rm -rf build && mkdir build && cp -r src/* build/ && npm run css:prod",
+    "css:prod": "NODE_ENV=production postcss ./tailwind.css -o ./build/assets/css/styles.css",
+    "css:dev": "postcss ./tailwind.css -o ./src/assets/css/styles.css",
+    "start": "serve src",
+    "dev": "webpack serve --mode development",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.2.5",
+    "postcss": "^8.2.9",
+    "postcss-cli": "^8.3.1",
+    "serve": "^11.3.2",
+    "tailwindcss": "^2.0.4",
+    "webpack": "^5.47.0",
+    "webpack-cli": "^4.7.2"
+  },
+  "dependencies": {
+    "p5": "^1.4.0"
+  }
+}
