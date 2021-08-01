@@ -174,8 +174,8 @@ const sketch = (s) => {
         let height = Math.min(window.innerHeight, 450);
         s.createCanvas(600, height);
 
-        warlock = new Warlock(20, 210, s.loadImage('images/warlock_hero.png'), s.loadImage('images/coil.jpg'), s.loadImage('images/bolt.jpg'));
-        mage = new Mage(480, 210, s.loadImage('images/mage_hero.png'), s.loadImage('images/ice_block.jpg'));
+        warlock = new Warlock(20, height-70, s.loadImage('images/warlock_hero.png'), s.loadImage('images/coil.jpg'), s.loadImage('images/bolt.jpg'));
+        mage = new Mage(480, height-70, s.loadImage('images/mage_hero.png'), s.loadImage('images/ice_block.jpg'));
         
     }
 
