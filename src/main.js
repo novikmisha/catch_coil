@@ -21,8 +21,6 @@ class Hero {
 
     _display(s, bg) {
         s.image(bg, this.x, this.y, 110, 110);
-        s.noFill();
-        s.rect(this.x, this.y, 110, 110);
     }
 }
 
@@ -107,7 +105,7 @@ class Warlock extends Hero {
         if (warlock.coilCd === 0
             && Math.random() > warlock.coilChance) {
 
-            warlock.coilCd = 8;
+            warlock.coilCd = 9;
             setTimeout(warlock.removeCoilTimeout, warlock.coilCd * 1000);
 
             return new Coil(130, 280, this.coil);
