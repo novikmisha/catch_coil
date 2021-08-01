@@ -6,7 +6,6 @@ let mage;
 let warlock;
 let spell = null;
 let spellSpeed = 7;
-let gameStarted = false;
 let score = 0;
 let height;
 
@@ -53,28 +52,36 @@ class Mage extends Hero {
 
         } else {
             this.blocked = true;
-            this.blockCd = 8;
-            this.blockTime = 1;
-            setTimeout(this.timeoutCd, 1000);
-            setTimeout(this.timeoutBuff, 1000);
+            this.blockCd = 5;
+            this.blockTime = 2;
+            setTimeout(this.timeoutCd.bind(this), 1000);
+            setTimeout(this.timeoutBuff.bind(this), 1000);
         }
     }
 
     timeoutBuff() {
-        if (mage.blocked) {
-            mage.blockTime -= 1;
-            if (mage.blockTime === 0) {
-                mage.blocked = false;
+        if (this.blocked) {
+            this.blockTime -= 1;
+            if (this.blockTime === 0) {
+                this.blocked = false;
             } else {
-                setTimeout(mage.timeoutBuff, 1000);
+                setTimeout(this.timeoutBuff.bind(this), 1000);
             }
         }
     }
 
     timeoutCd() {
-        if (mage.blockCd > 0) {
-            mage.blockCd -= 1;
-            setTimeout(mage.timeoutCd, 1000);
+        if (this.blockCd > 0) {
+            this.blockCd -= 1;
+            setTimeout(this.timeoutCd.bind(this), 1000);
+        }
+    }
+
+    onClick(s) {
+
+        if (this.x <= s.mouseX && s.mouseX <= this.x + 110
+            && this.y <= s.mouseY && s.mouseY <= this.y + 110) {
+            this.block();
         }
     }
 
@@ -88,14 +95,17 @@ class Warlock extends Hero {
         this.coilCd = 0;
         this.castCd = 0;
         this.coilChance = 0.4;
+        this.stopCasted=false;
     }
 
 
     cast() {
-        warlock.castCd = Math.floor(Math.random() * 3) + 3;
-        spell = warlock.getSpell();
-        setTimeout(warlock.cast, warlock.castCd * 1000);
-        spellSpeed += 0.4;
+        if (!this.stopCasted) {
+            this.castCd = Math.floor(Math.random() * 3) + 3;
+            spell = this.getSpell();
+            setTimeout(this.cast.bind(this), this.castCd * 1000);
+            spellSpeed += 0.4;
+        }
     }
 
     removeCoilTimeout() {
@@ -103,11 +113,11 @@ class Warlock extends Hero {
     }
 
     getSpell() {
-        if (warlock.coilCd === 0
-            && Math.random() > warlock.coilChance) {
+        if (this.coilCd === 0
+            && Math.random() > this.coilChance) {
 
-            warlock.coilCd = 9;
-            setTimeout(warlock.removeCoilTimeout, warlock.coilCd * 1000);
+            warlock.coilCd = 7;
+            setTimeout(this.removeCoilTimeout.bind(this), warlock.coilCd * 1000);
 
             return new Coil(130, height - 125, this.coil);
         }
@@ -135,7 +145,7 @@ class Spell {
     }
 
     checkHit(hero) {
-        return this.x > hero.x - 50;
+        return this.x > hero.x - 30;
     }
 
     onHit() {
@@ -162,11 +172,6 @@ class Coil extends Spell {
     }
 }
 
-function resetGame() {
-    gameStarted = false;
-    spell = null;
-    spellSpeed = 7;
-}
 
 
 const sketch = (s) => {
@@ -183,7 +188,7 @@ const sketch = (s) => {
         warlock = new Warlock(20, height-150, s.loadImage('images/warlock_hero.png'), s.loadImage('images/coil.jpg'), s.loadImage('images/bolt.jpg'));
         mage = new Mage(480, height-150, s.loadImage('images/mage_hero.png'), s.loadImage('images/ice_block.jpg'));
 
-        warlock.cast()
+        setTimeout(warlock.cast.bind(warlock), 1000);
         
     }
 
@@ -203,12 +208,39 @@ const sketch = (s) => {
         }
 
         if (mage.blockCd > 0) {
-            s.textSize(64);
+            s.textSize(50);
             s.fill(255, 255, 255);
-            s.text(mage.blockCd, 32, 70);
+            s.text(mage.blockCd, 520, height-90);
         }
 
     }
+
+    s.mouseClicked = () => {
+        mage.onClick(s);
+    }
 }
 
-const sketchInstance = new p5(sketch, "play-window");
+let button = document.getElementById("start");
+let scoreElement = document.getElementById("score");
+let hint = document.getElementById("hint");
+let sketchInstance;
+console.log(button);
+button.addEventListener("click", startGame);
+
+function startGame(event) {
+    score = 0;
+    button.style.display = "none";
+    sketchInstance = new p5(sketch, "play-window");
+    scoreElement.style.display = "none";
+    hint.style.display = "none";
+}
+
+function resetGame() {
+    spell = null;
+    spellSpeed = 7;
+    sketchInstance.remove();
+    button.style.display="block";
+    scoreElement.innerHTML = "Score: " + score;
+    scoreElement.style.display="block";
+    warlock.stopCasted = true;
+}
