@@ -8,6 +8,7 @@ let spell = null;
 let spellSpeed = 7;
 let gameStarted = false;
 let score = 0;
+let height;
 
 class Hero {
     constructor(x, y, bg) {
@@ -87,7 +88,6 @@ class Warlock extends Hero {
         this.coilCd = 0;
         this.castCd = 0;
         this.coilChance = 0.4;
-        setTimeout(this.cast, 2000);
     }
 
 
@@ -95,7 +95,7 @@ class Warlock extends Hero {
         warlock.castCd = Math.floor(Math.random() * 3) + 3;
         spell = warlock.getSpell();
         setTimeout(warlock.cast, warlock.castCd * 1000);
-        spellSpeed += 0.1;
+        spellSpeed += 0.4;
     }
 
     removeCoilTimeout() {
@@ -109,10 +109,10 @@ class Warlock extends Hero {
             warlock.coilCd = 9;
             setTimeout(warlock.removeCoilTimeout, warlock.coilCd * 1000);
 
-            return new Coil(130, 230, this.coil);
+            return new Coil(130, height - 125, this.coil);
         }
 
-        return new Bolt(130, 230, this.bolt);
+        return new Bolt(130, height - 125, this.bolt);
     }
 }
 
@@ -157,9 +157,15 @@ class Coil extends Spell {
             score += 1;
             spell = null;
         } else {
-            gameStarted = false;
+            resetGame();
         }
     }
+}
+
+function resetGame() {
+    gameStarted = false;
+    spell = null;
+    spellSpeed = 7;
 }
 
 
@@ -171,16 +177,17 @@ const sketch = (s) => {
     s.setup = () => {
         bg = s.loadImage('images/arena.jpg')
 
-        let height = Math.min(window.innerHeight, 450);
+        height = Math.min(window.innerHeight, 450);
         s.createCanvas(600, height);
 
         warlock = new Warlock(20, height-150, s.loadImage('images/warlock_hero.png'), s.loadImage('images/coil.jpg'), s.loadImage('images/bolt.jpg'));
         mage = new Mage(480, height-150, s.loadImage('images/mage_hero.png'), s.loadImage('images/ice_block.jpg'));
+
+        warlock.cast()
         
     }
 
     s.draw = () => {
-
 
         s.background(bg);
 
@@ -191,15 +198,9 @@ const sketch = (s) => {
         warlock.display(s);
         mage.display(s);
 
-        if (gameStarted) {
-            s.noLoop();
-        }
-
         if (spell != null)  {
             spell.display(s);
         }
-
-
 
         if (mage.blockCd > 0) {
             s.textSize(64);
