@@ -30,7 +30,6 @@ class Mage extends Hero {
         super(x, y, bg);
         this.iceBlock = iceBlock;
         this.blocked = false;
-        this.blockTime = 0;
         this.blockCd = 0;
     }
 
@@ -48,26 +47,16 @@ class Mage extends Hero {
     }
 
     block() {
-        if (this.blockCd > 0) {
-
-        } else {
+        if (this.blockCd ==  0) {
             this.blocked = true;
             this.blockCd = 5;
-            this.blockTime = 2;
             setTimeout(this.timeoutCd.bind(this), 1000);
-            setTimeout(this.timeoutBuff.bind(this), 1000);
+            setTimeout(this.timeoutBuff.bind(this), 2000);
         }
     }
 
     timeoutBuff() {
-        if (this.blocked) {
-            this.blockTime -= 1;
-            if (this.blockTime === 0) {
-                this.blocked = false;
-            } else {
-                setTimeout(this.timeoutBuff.bind(this), 1000);
-            }
-        }
+        this.blocked = false;
     }
 
     timeoutCd() {
@@ -78,9 +67,9 @@ class Mage extends Hero {
     }
 
     onClick(s) {
-
         if (this.x <= s.mouseX && s.mouseX <= this.x + 110
             && this.y <= s.mouseY && s.mouseY <= this.y + 110) {
+
             this.block();
         }
     }
@@ -193,7 +182,6 @@ const sketch = (s) => {
     }
 
     s.draw = () => {
-
         s.background(bg);
 
         s.textSize(32);
