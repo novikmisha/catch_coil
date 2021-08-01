@@ -24,4 +24,8 @@ jobs:
       run: |
         npm install
         npm run build
-        git push origin 'git subtree split --prefix dist master':gh-pages --force
+    - name: Deploy 🚀
+      uses: JamesIves/github-pages-deploy-action@4.1.4
+      with:
+        branch: gh-pages # The branch the action should deploy to.
+        folder: dist # The folder the action should deploy.
