@@ -62,7 +62,9 @@ class Mage extends Hero {
     timeoutCd() {
         if (this.blockCd > 0) {
             this.blockCd -= 1;
-            setTimeout(this.timeoutCd.bind(this), 1000);
+            if (this.blockCd > 0) {
+                setTimeout(this.timeoutCd.bind(this), 1000);
+            }
         }
     }
 
@@ -203,7 +205,7 @@ const sketch = (s) => {
 
     }
 
-    s.mouseClicked = () => {
+    s.mousePressed = () => {
         mage.onClick(s);
     }
 }
@@ -212,7 +214,6 @@ let button = document.getElementById("start");
 let scoreElement = document.getElementById("score");
 let hint = document.getElementById("hint");
 let sketchInstance;
-console.log(button);
 button.addEventListener("click", startGame);
 
 function startGame(event) {
