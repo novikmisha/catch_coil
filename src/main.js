@@ -1,3 +1,4 @@
+import './tailwind.css';
 let p5 = require('p5');
 
 let mage;
@@ -167,11 +168,11 @@ const sketch = (s) => {
     let bg;
 
     s.setup = () => {
-        bg = s.loadImage('assets/images/arena.jpg')
+        bg = s.loadImage('images/arena.jpg')
         s.createCanvas(600, 450);
 
-        warlock = new Warlock(20, 250, s.loadImage('assets/images/warlock_hero.png'), s.loadImage('assets/images/coil.jpg'), s.loadImage('assets/images/bolt.jpg'));
-        mage = new Mage(480, 250, s.loadImage('assets/images/mage_hero.png'), s.loadImage('assets/images/ice_block.jpg'));
+        warlock = new Warlock(20, 250, s.loadImage('images/warlock_hero.png'), s.loadImage('images/coil.jpg'), s.loadImage('images/bolt.jpg'));
+        mage = new Mage(480, 250, s.loadImage('images/mage_hero.png'), s.loadImage('images/ice_block.jpg'));
         
     }
 
