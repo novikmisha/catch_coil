@@ -1,11 +1,12 @@
 import './tailwind.css';
+
 let p5 = require('p5');
 
 let mage;
 let warlock;
 let spell = null;
 let spellSpeed = 7;
-let gameOver = false;
+let gameStarted = false;
 let score = 0;
 
 class Hero {
@@ -108,10 +109,10 @@ class Warlock extends Hero {
             warlock.coilCd = 9;
             setTimeout(warlock.removeCoilTimeout, warlock.coilCd * 1000);
 
-            return new Coil(130, 280, this.coil);
+            return new Coil(130, 230, this.coil);
         }
 
-        return new Bolt(130, 280, this.bolt);
+        return new Bolt(130, 230, this.bolt);
     }
 }
 
@@ -144,6 +145,7 @@ class Spell {
 class Bolt extends Spell {
 
     onHit() {
+        score += 1;
         spell = null;
     }
 }
@@ -155,7 +157,7 @@ class Coil extends Spell {
             score += 1;
             spell = null;
         } else {
-            gameOver = true
+            gameStarted = false;
         }
     }
 }
@@ -164,52 +166,48 @@ class Coil extends Spell {
 const sketch = (s) => {
 
     let bg;
+	let button;
 
     s.setup = () => {
         bg = s.loadImage('images/arena.jpg')
-        s.createCanvas(600, 450);
 
-        warlock = new Warlock(20, 250, s.loadImage('images/warlock_hero.png'), s.loadImage('images/coil.jpg'), s.loadImage('images/bolt.jpg'));
-        mage = new Mage(480, 250, s.loadImage('images/mage_hero.png'), s.loadImage('images/ice_block.jpg'));
+        let height = Math.min(window.innerHeight, 450);
+        s.createCanvas(600, height);
+
+        warlock = new Warlock(20, 210, s.loadImage('images/warlock_hero.png'), s.loadImage('images/coil.jpg'), s.loadImage('images/bolt.jpg'));
+        mage = new Mage(480, 210, s.loadImage('images/mage_hero.png'), s.loadImage('images/ice_block.jpg'));
         
     }
 
     s.draw = () => {
 
-        if (gameOver) {
-            s.noLoop();
-        }
 
         s.background(bg);
+
+        s.textSize(32);
+        s.fill(255, 255, 255);
+        s.text('Score : ' + score, 250, 50)
+
         warlock.display(s);
         mage.display(s);
+
+        if (gameStarted) {
+            s.noLoop();
+        }
 
         if (spell != null)  {
             spell.display(s);
         }
 
-        document.getElementById("score").innerHTML = score;
-    }
-}
 
-const sketchButton = (s) => {
-    s.setup = () => {
-        let canvas = s.createCanvas(100, 100);
-        canvas.mouseClicked(() => { mage.block() })
-    }
-
-    s.draw = () => {
-        if (gameOver) {
-            s.noLoop();
-        }
-        s.background(mage.iceBlock);
 
         if (mage.blockCd > 0) {
             s.textSize(64);
             s.fill(255, 255, 255);
             s.text(mage.blockCd, 32, 70);
         }
+
     }
 }
+
 const sketchInstance = new p5(sketch, "play-window");
-const buttonSketchInstance = new p5(sketchButton, "ice-block-button");
