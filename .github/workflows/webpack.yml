@@ -25,4 +25,5 @@ jobs:
         git fetch --all
         npm install
         npm run build
+        git fetch --all
         git push origin `git subtree split --prefix dist master`:gh-pages --force
