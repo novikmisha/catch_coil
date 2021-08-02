@@ -205,9 +205,12 @@ const sketch = (s) => {
 
     }
 
-    s.mousePressed = () => {
+    s.touchStarted = () => {
+
         mage.onClick(s);
     }
+
+
 }
 
 let button = document.getElementById("start");
